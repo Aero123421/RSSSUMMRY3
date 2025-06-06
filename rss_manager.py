@@ -12,17 +12,32 @@ class RSSManager:
     def __init__(self, config_manager):
         self.config_manager = config_manager
         self.processed_articles_file = "processed_articles.json"
+
+        # ボリュームマウントの設定ミスなどでファイルパスがディレクトリに
+        # なっている場合は、そのディレクトリ内にデータ用ファイルを作成する
+        if os.path.isdir(self.processed_articles_file):
+            self.processed_articles_file = os.path.join(
+                self.processed_articles_file, "data.json"
+            )
+
         self.processed_articles = self.load_processed_articles()
     
     def load_processed_articles(self) -> Dict[str, str]:
         """処理済み記事のハッシュを読み込む"""
-        if os.path.exists(self.processed_articles_file):
-            with open(self.processed_articles_file, 'r', encoding='utf-8') as f:
-                return json.load(f)
+        if os.path.isfile(self.processed_articles_file):
+            try:
+                with open(self.processed_articles_file, 'r', encoding='utf-8') as f:
+                    return json.load(f)
+            except Exception:
+                # ファイルが壊れている場合などは空の状態から始める
+                return {}
         return {}
     
     def save_processed_articles(self):
         """処理済み記事のハッシュを保存"""
+        directory = os.path.dirname(self.processed_articles_file)
+        if directory:
+            os.makedirs(directory, exist_ok=True)
         with open(self.processed_articles_file, 'w', encoding='utf-8') as f:
             json.dump(self.processed_articles, f, indent=2, ensure_ascii=False)
     
