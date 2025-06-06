@@ -1,0 +1,22 @@
+version: '3.8'
+
+services:
+  rss-bot:
+    build: .
+    container_name: rss-discord-bot
+    restart: unless-stopped
+    volumes:
+      - ./config.json:/app/config.json
+      - ./processed_articles.json:/app/processed_articles.json
+      - ./logs:/app/logs
+    environment:
+      - DISCORD_TOKEN=${DISCORD_TOKEN}
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - LMSTUDIO_API_URL=${LMSTUDIO_API_URL:-http://localhost:1234/v1/chat/completions}
+      - LMSTUDIO_API_KEY=${LMSTUDIO_API_KEY:-lm-studio}
+      - ADMIN_USER_ID=${ADMIN_USER_ID}
+      - DEFAULT_CHECK_INTERVAL=${DEFAULT_CHECK_INTERVAL:-15}
+      - ADMIN_ONLY=${ADMIN_ONLY:-false}
+    env_file:
+      - .env
+    network_mode: host
