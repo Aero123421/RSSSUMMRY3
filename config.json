@@ -1,0 +1,15 @@
+{
+    "discord_token": "",
+    "gemini_api_key": "",
+    "lmstudio_api_url": "http://localhost:1234/v1/chat/completions",
+    "lmstudio_api_key": "lm-studio",
+    "admin_user_id": "",
+    "default_check_interval": 15,
+    "feeds": {},
+    "channels": {},
+    "ai_model_settings": {
+        "translation_model": "gemini",
+        "summary_model": "gemini",
+        "summary_length": 200
+    }
+}
